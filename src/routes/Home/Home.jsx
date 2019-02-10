@@ -15,7 +15,7 @@ import ShowChart from '@material-ui/icons/ShowChart';
 import CollectionsBookmark from '@material-ui/icons/CollectionsBookmark';
 
 
-import {Library, Search} from '../'
+import {Library, Search, Top} from '../'
 
 const styles = {
       root: {
@@ -34,9 +34,9 @@ class Home extends React.Component {
       console.log(localStorage.getItem('appToken'))
       this.props.history.push('login')
     }
-    if(pathname == '/search') {
+    if(pathname === '/search') {
       this.state = {value: 0}
-    } else if(pathname == '/top') {
+    } else if(pathname === '/top') {
       this.state = {value: 2}
     } else {
       this.state = {value: 1}
@@ -66,6 +66,7 @@ class Home extends React.Component {
         <div className='content'>
           <Route path="/search" component={Search} />
           <Route path="/library" component={Library} />
+          <Route path="/top" component={Top} />
         </div>
         <BottomNavigation
           value={value}
