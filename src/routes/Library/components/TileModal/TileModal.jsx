@@ -30,9 +30,6 @@ class ResponsiveDialog extends React.Component {
     )
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-          Open responsive dialog
-        </Button>
         <Dialog
           fullScreen={fullScreen}
           open={open}
