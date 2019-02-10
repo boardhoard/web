@@ -9,10 +9,25 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 class ResponsiveDialog extends React.Component {
+  state = {
+    small: true
+  }
 
   render() {
     const { fullScreen, open, tile, handleClose } = this.props;
+    const {small} = this.state;
+    const cardInfo = small ? (
+      <DialogContentText onClick={()=>this.setState({small: false})}>{tile.description ? tile.description.substring(0, 140) + '... ':''}<i>(Click for more)</i> </DialogContentText>
+    ) : (
+      <>
+      <DialogContentText>{tile.description}</DialogContentText><br/>
+      <DialogContentText><b>Players:</b> {tile.minPlayers} - {tile.maxPlayers}</DialogContentText>
+      <DialogContentText><b>Playtime:</b> {tile.playingTime} mins</DialogContentText>
+      <DialogContentText><b>Published:</b> {tile.yearPublished} mins</DialogContentText>
+      <DialogContentText><b>Rating:</b> {Math.round(tile.averageRating*10)/10}/10</DialogContentText>
 
+      </>
+    )
     return (
       <div>
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
@@ -26,8 +41,8 @@ class ResponsiveDialog extends React.Component {
         >
           <DialogTitle id="responsive-dialog-title">{tile.title}</DialogTitle>
           <DialogContent>
-          <img src={tile.img} width='100%' alt={tile.title} onClick={() => this.handleTileOpen(tile)} />
-            <DialogContentText>{tile.description}</DialogContentText>
+            <img src={tile.img} width='100%' alt={tile.title} />
+            {cardInfo}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary" autoFocus>
