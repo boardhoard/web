@@ -10,24 +10,41 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 class ResponsiveDialog extends React.Component {
   state = {
-    small: true
+    small: true,
+    tile: null
+  }
+
+  componentDidMount() {
+    const {tile} = this.state
+    const {id} = this.props;
+    console.log(tile, `https://bgg-json.azurewebsites.net/thing/${id}`)
+    fetch(`https://bgg-json.azurewebsites.net/thing/${id}`)
+      .then(response => response.json())
+      .then(tile => this.setState({ tile }));
+
   }
 
   render() {
-    const { fullScreen, open, tile, handleClose } = this.props;
-    const {small} = this.state;
-    const cardInfo = small ? (
-      <DialogContentText onClick={()=>this.setState({small: false})}>{tile.description ? tile.description.substring(0, 140) + '... ':''}<i>(Click for more)</i> </DialogContentText>
-    ) : (
-      <>
-      <DialogContentText>{tile.description}</DialogContentText><br/>
-      <DialogContentText><b>Players:</b> {tile.minPlayers} - {tile.maxPlayers}</DialogContentText>
-      <DialogContentText><b>Playtime:</b> {tile.playingTime} mins</DialogContentText>
-      <DialogContentText><b>Published:</b> {tile.yearPublished}</DialogContentText>
-      <DialogContentText><b>Rating:</b> {Math.round(tile.averageRating*10)/10}/10</DialogContentText>
-
-      </>
-    )
+    const { fullScreen, open, handleClose, meta } = this.props;
+    const {small, tile} = this.state;
+    let cardInfo = null
+    if(tile) {
+      cardInfo = small ? (
+        <>
+        <DialogContentText onClick={()=>this.setState({small: false})}>{tile.description ? tile.description.substring(0, 140) + '... ':''}<i>(Click for more)</i> </DialogContentText>
+        </>
+      ) : (
+        <>
+        <DialogContentText>{tile.description}</DialogContentText><br/>
+        <DialogContentText><b>Players:</b> {tile.minPlayers} - {tile.maxPlayers}</DialogContentText>
+        <DialogContentText><b>Playtime:</b> {tile.playingTime} mins</DialogContentText>
+        <DialogContentText><b>Published:</b> {tile.yearPublished}</DialogContentText>
+        <DialogContentText><b>Rating:</b> {Math.round(tile.averageRating*10)/10}/10</DialogContentText>
+  
+        </>
+      )
+    }
+    
     return (
       <div>
         <Dialog
@@ -36,13 +53,13 @@ class ResponsiveDialog extends React.Component {
           onClose={() => {handleClose(); this.setState({small: true})}}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="responsive-dialog-title">{tile.title}</DialogTitle>
+          <DialogTitle id="responsive-dialog-title">{meta.name}</DialogTitle>
           <DialogContent>
-            <img src={tile.img} width='100%' alt={tile.title} />
+          <img src={tile ? tile.image : meta.thumbnail} width='100%' alt={meta.name} />
             {cardInfo}
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => {handleClose(); this.setState({small: true})}} color="primary" autoFocus>
+            <Button onClick={() => {handleClose(); this.setState({small: true, tile: null})}} color="primary" autoFocus>
               Close
             </Button>
           </DialogActions>
