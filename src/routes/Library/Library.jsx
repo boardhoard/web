@@ -62,18 +62,13 @@ const tileData = games.games.map((el) => {
 class TitlebarGridList extends React.Component {
   state = {
     tileModalVisable: false,
-    tileModalData: {}
+    tileModalData: {},
+    tiles: []
   }
 
   componentDidMount() {
-    if(firebase.auth().currentUser || localStorage.getItem('appToken')){
-      var userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : localStorage.getItem('appToken');
-      firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-        console.log(snapshot)
-        var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-      })
-    }
-    
+    this.setState({tiles: localStorage.getItem('library') || []})
+    console.log(this.state.tiles)
   }
 
   handleTileClose = () => {
@@ -85,14 +80,15 @@ class TitlebarGridList extends React.Component {
   }
   render() {
     const { classes } = this.props;
-    const { tileModalData, tileModalVisable} = this.state;
+    const { tileModalData, tileModalVisable, tiles} = this.state;
     return (
       <div className={classes.root}>
         <GridList cellHeight={180} className={classes.gridList}>
           <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
             <ListSubheader component="div">Boardhoard</ListSubheader>
           </GridListTile>
-          {tileData.map(tile => (
+          {tiles.length === 0 && <i style={{margin: 'auto', marginTop: 100}}>No Games in Library</i>}
+          {tiles && tiles.map(tile => (
             <GridListTile key={tile.img}>
               <img src={tile.thumbnail} alt={tile.title} onClick={() => this.handleTileOpen(tile)} />
               <GridListTileBar
