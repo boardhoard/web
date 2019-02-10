@@ -1,5 +1,6 @@
 import React from 'react';
 
+import firebase from 'firebase';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
@@ -64,6 +65,17 @@ class TitlebarGridList extends React.Component {
     tileModalData: {}
   }
 
+  componentDidMount() {
+    if(firebase.auth().currentUser || localStorage.getItem('appToken')){
+      var userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : localStorage.getItem('appToken');
+      firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
+        console.log(snapshot)
+        var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+      })
+    }
+    
+  }
+
   handleTileClose = () => {
     this.setState({ tileModalVisable: false });
   };
@@ -82,7 +94,7 @@ class TitlebarGridList extends React.Component {
           </GridListTile>
           {tileData.map(tile => (
             <GridListTile key={tile.img}>
-              <img src={tile.img} alt={tile.title} onClick={() => this.handleTileOpen(tile)} />
+              <img src={tile.thumbnail} alt={tile.title} onClick={() => this.handleTileOpen(tile)} />
               <GridListTileBar
                 title={tile.title}
                 subtitle={<span>by: {tile.author}</span>}
