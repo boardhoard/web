@@ -101,7 +101,7 @@ class Search extends React.Component {
             <ListSubheader component="div">Boardhoard</ListSubheader>
             <SearchBar searchTerm={searchTerm} handleSearch={this.handleSearch}/>
           </GridListTile>
-          {!searchTerm && <i style={{margin: 'auto', marginTop: 100}}>Please enter searchterm...</i>}
+          {!searchTerm && <i style={{margin: 'auto', marginTop: 100}}>Please enter search term...</i>}
           {this.filteredTiles(tiles, searchTerm).map(tile => (
             <GridListTile key={tile.img}>
               <img src={tile.thumbnail} alt={tile.name} onClick={() => this.handleTileOpen(tile)} />
