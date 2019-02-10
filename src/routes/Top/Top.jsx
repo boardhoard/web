@@ -80,6 +80,17 @@ class TitlebarGridList extends React.Component {
   handleTileOpen = (tileModalData) => {
     this.setState({tileModalVisable: true, tileModalData})
   }
+
+  addToLibrary = (tile) => {
+    let library = localStorage.getItem('library')
+    if(library && library.length > 0) {
+      library = [...JSON.parse(library),tile]
+    } else {
+      library = [tile]
+    }
+    localStorage.setItem('library', JSON.stringify(library))
+  }
+
   render() {
     const { classes } = this.props;
     const { tileModalData, tileModalVisable, top} = this.state;
@@ -97,7 +108,7 @@ class TitlebarGridList extends React.Component {
                 title={tile.name}
                 subtitle={<span>Rank: {tile.rank}</span>}
                 actionIcon={
-                  <IconButton className={classes.icon}>
+                  <IconButton className={classes.icon} onClick={() => this.addToLibrary(tile)}>
                     <LibraryAdd />
                   </IconButton>
                 }
