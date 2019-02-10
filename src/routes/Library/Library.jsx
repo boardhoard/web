@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
 
 import games from '../Home/data'
-import {TileModal} from './components'
+import {TileModal} from '../../components'
 
 const styles = theme => ({
   root: {
@@ -50,14 +50,6 @@ const styles = theme => ({
  * ];
  */
 
-const tileData = games.games.map((el) => {
-  return {
-    ...el,
-    img: el.image,
-    title: el.name,
-    author: el.publishers,
-  }
-})
 
 class TitlebarGridList extends React.Component {
   state = {
@@ -67,7 +59,11 @@ class TitlebarGridList extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({tiles: localStorage.getItem('library') || []})
+    let tiles = JSON.parse(localStorage.getItem('library'))
+    if(tiles === null) {
+      tiles = []
+    }
+    this.setState({tiles})
     console.log(this.state.tiles)
   }
 
@@ -89,11 +85,11 @@ class TitlebarGridList extends React.Component {
           </GridListTile>
           {tiles.length === 0 && <i style={{margin: 'auto', marginTop: 100}}>No Games in Library</i>}
           {tiles && tiles.map(tile => (
-            <GridListTile key={tile.img}>
-              <img src={tile.thumbnail} alt={tile.title} onClick={() => this.handleTileOpen(tile)} />
+            <GridListTile key={tile.thumbnail}>
+              <img src={tile.thumbnail} alt={tile.name} onClick={() => this.handleTileOpen(tile)} />
               <GridListTileBar
-                title={tile.title}
-                subtitle={<span>by: {tile.author}</span>}
+                title={tile.name}
+                subtitle={<span>released in {tile.yearPublished}</span>}
                 actionIcon={
                   <IconButton className={classes.icon}>
                     <LibraryAdd />
@@ -103,7 +99,7 @@ class TitlebarGridList extends React.Component {
             </GridListTile>
           ))}
         </GridList>
-        <TileModal open={tileModalVisable} tile={tileModalData} handleClose={this.handleTileClose} />
+        {(tileModalVisable && tileModalData.gameId) && <TileModal id={tileModalData.gameId} open={tileModalVisable} meta={tileModalData} handleClose={this.handleTileClose} />}
       </div>
     );
   }
