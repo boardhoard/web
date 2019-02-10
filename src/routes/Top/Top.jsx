@@ -8,6 +8,8 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
+import { Spin } from 'antd';
+
 
 import games from '../Home/data'
 import {TileModal} from '../../components'
@@ -61,7 +63,14 @@ const tileData = games.games.map((el) => {
 class TitlebarGridList extends React.Component {
   state = {
     tileModalVisable: false,
-    tileModalData: {}
+    tileModalData: {},
+    top: null
+  }
+
+  componentDidMount() {
+    fetch('https://bgg-json.azurewebsites.net/hot')
+      .then(response => response.json())
+      .then(top => this.setState({ top }));
   }
 
   handleTileClose = () => {
@@ -73,19 +82,20 @@ class TitlebarGridList extends React.Component {
   }
   render() {
     const { classes } = this.props;
-    const { tileModalData, tileModalVisable} = this.state;
+    const { tileModalData, tileModalVisable, top} = this.state;
     return (
       <div className={classes.root}>
         <GridList cellHeight={180} className={classes.gridList}>
           <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
             <ListSubheader component="div">Boardhoard</ListSubheader>
           </GridListTile>
-          {tileData.map(tile => (
-            <GridListTile key={tile.img}>
-              <img src={tile.img} alt={tile.title} onClick={() => this.handleTileOpen(tile)} />
+          {!top && <Spin style={{width: '100%', marginTop: 100}} size="large" />}
+          {top && top.map(tile => (
+            <GridListTile key={tile.thumbnail}>
+              <img src={tile.thumbnail} alt={tile.name} onClick={() => this.handleTileOpen(tile)} />
               <GridListTileBar
-                title={tile.title}
-                subtitle={<span>by: {tile.author}</span>}
+                title={tile.name}
+                subtitle={<span>Rank: {tile.rank}</span>}
                 actionIcon={
                   <IconButton className={classes.icon}>
                     <LibraryAdd />
@@ -95,7 +105,7 @@ class TitlebarGridList extends React.Component {
             </GridListTile>
           ))}
         </GridList>
-        <TileModal open={tileModalVisable} tile={tileModalData} handleClose={this.handleTileClose} />
+        {(tileModalVisable && tileModalData.gameId) && <TileModal id={tileModalData.gameId} open={tileModalVisable} meta={tileModalData} handleClose={this.handleTileClose} />}
       </div>
     );
   }
