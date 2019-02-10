@@ -97,7 +97,6 @@ class Search extends React.Component {
     } else {
       library = [tile]
     }
-    console.log(library, tile)
     localStorage.setItem('library', JSON.stringify(library))
   }
   render() {
