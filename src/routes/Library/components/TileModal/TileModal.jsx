@@ -23,7 +23,7 @@ class ResponsiveDialog extends React.Component {
       <DialogContentText>{tile.description}</DialogContentText><br/>
       <DialogContentText><b>Players:</b> {tile.minPlayers} - {tile.maxPlayers}</DialogContentText>
       <DialogContentText><b>Playtime:</b> {tile.playingTime} mins</DialogContentText>
-      <DialogContentText><b>Published:</b> {tile.yearPublished} mins</DialogContentText>
+      <DialogContentText><b>Published:</b> {tile.yearPublished}</DialogContentText>
       <DialogContentText><b>Rating:</b> {Math.round(tile.averageRating*10)/10}/10</DialogContentText>
 
       </>
@@ -36,7 +36,7 @@ class ResponsiveDialog extends React.Component {
         <Dialog
           fullScreen={fullScreen}
           open={open}
-          onClose={handleClose}
+          onClose={() => {handleClose(); this.setState({small: true})}}
           aria-labelledby="responsive-dialog-title"
         >
           <DialogTitle id="responsive-dialog-title">{tile.title}</DialogTitle>
@@ -45,7 +45,7 @@ class ResponsiveDialog extends React.Component {
             {cardInfo}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary" autoFocus>
+            <Button onClick={() => {handleClose(); this.setState({small: true})}} color="primary" autoFocus>
               Close
             </Button>
           </DialogActions>
