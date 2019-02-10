@@ -8,6 +8,8 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
+import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
+
 import { Spin } from 'antd';
 
 
@@ -64,10 +66,18 @@ class TitlebarGridList extends React.Component {
   state = {
     tileModalVisable: false,
     tileModalData: {},
-    top: null
+    top: null,
+    library: []
   }
 
   componentDidMount() {
+    let library = localStorage.getItem('library')
+    if(library && library.length > 0) {
+      library = [...JSON.parse(library)].map(el => el.gameId)
+    } else {
+      library = []
+    }
+    this.setState({library})
     fetch('https://bgg-json.azurewebsites.net/hot')
       .then(response => response.json())
       .then(top => this.setState({ top }));
@@ -89,11 +99,13 @@ class TitlebarGridList extends React.Component {
       library = [tile]
     }
     localStorage.setItem('library', JSON.stringify(library))
+    this.setState({library: library.map( el => el.gameId)})
+
   }
 
   render() {
     const { classes } = this.props;
-    const { tileModalData, tileModalVisable, top} = this.state;
+    const { tileModalData, tileModalVisable, top, library} = this.state;
     return (
       <div className={classes.root}>
         <GridList cellHeight={180} className={classes.gridList}>
@@ -108,8 +120,8 @@ class TitlebarGridList extends React.Component {
                 title={tile.name}
                 subtitle={<span>Rank: {tile.rank}</span>}
                 actionIcon={
-                  <IconButton className={classes.icon} onClick={() => this.addToLibrary(tile)}>
-                    <LibraryAdd />
+                  <IconButton className={classes.icon} >
+                    {library.includes(tile.gameId) ? <PlaylistAddCheck/> : <LibraryAdd onClick={() => this.addToLibrary(tile)} />}
                   </IconButton>
                 }
               />
