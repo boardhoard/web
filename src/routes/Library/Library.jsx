@@ -8,7 +8,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
-import LibraryAdd from '@material-ui/icons/LibraryAdd';
+import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 import {TileModal} from '../../components'
 
@@ -91,7 +91,7 @@ class TitlebarGridList extends React.Component {
                 subtitle={<span>released in {tile.yearPublished}</span>}
                 actionIcon={
                   <IconButton className={classes.icon}>
-                    <LibraryAdd />
+                    <PlaylistAddCheck />
                   </IconButton>
                 }
               />
