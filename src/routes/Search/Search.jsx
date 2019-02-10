@@ -89,6 +89,17 @@ class Search extends React.Component {
     console.timeEnd('filter')
     return filtered
   }
+
+  addToLibrary = (tile) => {
+    let library = localStorage.getItem('library')
+    if(library && library.length > 0) {
+      library = [...JSON.parse(library),tile]
+    } else {
+      library = [tile]
+    }
+    console.log(library, tile)
+    localStorage.setItem('library', JSON.stringify(library))
+  }
   render() {
     const { classes } = this.props;
     const { searchTerm, tiles, tileModalData, tileModalVisable} = this.state;
@@ -103,13 +114,13 @@ class Search extends React.Component {
           </GridListTile>
           {!searchTerm && <i style={{margin: 'auto', marginTop: 100}}>Please enter search term...</i>}
           {this.filteredTiles(tiles, searchTerm).map(tile => (
-            <GridListTile key={tile.img}>
+            <GridListTile key={tile.thumbnail}>
               <img src={tile.thumbnail} alt={tile.name} onClick={() => this.handleTileOpen(tile)} />
               <GridListTileBar
                 title={tile.name}
                 subtitle={<span>Rank: {tile.rank}</span>}
                 actionIcon={
-                  <IconButton className={classes.icon}>
+                  <IconButton className={classes.icon} onClick={() => this.addToLibrary(tile)}>
                     <LibraryAdd />
                   </IconButton>
                 }
