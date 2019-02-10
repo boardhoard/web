@@ -8,6 +8,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
+import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 
 import {TileModal} from '../../components'
@@ -60,10 +61,16 @@ class Search extends React.Component {
   }
 
   componentDidMount() {
-    console.time('ervin')
+    let library = localStorage.getItem('library')
+    if(library && library.length > 0) {
+      library = [...JSON.parse(library)].map(el => el.gameId)
+    } else {
+      library = []
+    }
+    this.setState({library})
     fetch('https://bgg-json.azurewebsites.net/collection/ervinding')
       .then(response => response.json())
-      .then(tiles => {this.setState({ tiles }); console.timeEnd('ervin')});
+      .then(tiles => {this.setState({ tiles })});
   }
 
   handleSearch = (searchTerm) => {
@@ -98,10 +105,11 @@ class Search extends React.Component {
       library = [tile]
     }
     localStorage.setItem('library', JSON.stringify(library))
+    this.setState({library: library.map( el => el.gameId)})
   }
   render() {
     const { classes } = this.props;
-    const { searchTerm, tiles, tileModalData, tileModalVisable} = this.state;
+    const { searchTerm, tiles, tileModalData, tileModalVisable, library} = this.state;
 
     console.log(searchTerm)
     return (
@@ -119,8 +127,8 @@ class Search extends React.Component {
                 title={tile.name}
                 subtitle={<span>Rank: {tile.rank}</span>}
                 actionIcon={
-                  <IconButton className={classes.icon} onClick={() => this.addToLibrary(tile)}>
-                    <LibraryAdd />
+                  <IconButton className={classes.icon} >
+                    {library.includes(tile.gameId) ? <PlaylistAddCheck/> : <LibraryAdd onClick={() => this.addToLibrary(tile)} />}
                   </IconButton>
                 }
               />
