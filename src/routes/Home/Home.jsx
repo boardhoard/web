@@ -30,6 +30,10 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     const {pathname} = this.props.location
+    if(!localStorage.getItem('appToken')) {
+      console.log(localStorage.getItem('appToken'))
+      this.props.history.push('login')
+    }
     if(pathname == '/search') {
       this.state = {value: 0}
     } else if(pathname == '/top') {
