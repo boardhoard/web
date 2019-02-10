@@ -7,7 +7,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
+import LibraryAdd from '@material-ui/icons/LibraryAdd';
 
 
 import {SearchBar} from './components'
@@ -52,7 +52,15 @@ const styles = theme => ({
 
 class Search extends React.Component {
   state = {
-    searchTerm: ''
+    searchTerm: '',
+    tiles: []
+  }
+
+  componentDidMount() {
+    console.time('ervin')
+    fetch('https://bgg-json.azurewebsites.net/collection/ervinding')
+      .then(response => response.json())
+      .then(tiles => {this.setState({ tiles }); console.timeEnd('ervin')});
   }
 
   handleSearch = (searchTerm) => {
@@ -60,23 +68,19 @@ class Search extends React.Component {
   } 
 
   filteredTiles = (tiles, filter) => {
+    console.time('filter')
     if(filter === ''){
       return []
     }
-    return tiles.games.filter( el => {
-      return el.name.toLowerCase().includes(filter.toLowerCase())
-    }).map((el) => {
-      return {
-        ...el,
-        img: el.image,
-        title: el.name,
-        author: el.publishers,
-      }
+    const filtered = tiles.filter( el => {
+      return el.name.toLowerCase().startsWith(filter.toLowerCase())
     })
+    console.timeEnd('filter')
+    return filtered
   }
   render() {
     const { classes } = this.props;
-    const { searchTerm } = this.state;
+    const { searchTerm, tiles } = this.state;
     console.log(searchTerm)
     return (
       <div className={classes.root}>
@@ -85,15 +89,16 @@ class Search extends React.Component {
             <ListSubheader component="div">Boardhoard</ListSubheader>
             <SearchBar searchTerm={searchTerm} handleSearch={this.handleSearch}/>
           </GridListTile>
-          {this.filteredTiles(games, searchTerm).map(tile => (
+          {!searchTerm && <i style={{margin: 'auto', marginTop: 100}}>Please enter searchterm...</i>}
+          {this.filteredTiles(tiles, searchTerm).map(tile => (
             <GridListTile key={tile.img}>
-              <img src={tile.img} alt={tile.title} />
+              <img src={tile.thumbnail} alt={tile.name} />
               <GridListTileBar
-                title={tile.title}
-                subtitle={<span>by: {tile.author}</span>}
+                title={tile.name}
+                subtitle={<span>Rank: {tile.rank}</span>}
                 actionIcon={
                   <IconButton className={classes.icon}>
-                    <InfoIcon />
+                    <LibraryAdd />
                   </IconButton>
                 }
               />
