@@ -26,14 +26,11 @@ const styles = {
 };
 
 function SearchBar(props) {
-  const { classes } = props;
-
+  const { classes, searchTerm, handleSearch } = props;
+  
   return (
     <Paper className={classes.root} elevation={3}>
-      {/* <IconButton className={classes.iconButton} aria-label="Menu">
-        <MenuIcon />
-      </IconButton> */}
-      <InputBase className={classes.input} placeholder="Search Boardgames" />
+      <InputBase className={classes.input} value={searchTerm} onChange={(event)=> {handleSearch(event.target.value)}} placeholder="Search Boardgames" />
       <IconButton className={classes.iconButton} aria-label="Search">
         <SearchIcon />
       </IconButton>

@@ -50,41 +50,59 @@ const styles = theme => ({
  * ];
  */
 
-const tileData = games.games.map((el) => {
-  return {
-    img: el.image,
-    title: el.name,
-    author: el.publishers
+class Search extends React.Component {
+  state = {
+    searchTerm: ''
   }
-})
 
-function Search(props) {
-  const { classes } = props;
+  handleSearch = (searchTerm) => {
+    this.setState({searchTerm})
+  } 
 
-  return (
-    <div className={classes.root}>
-      <GridList cellHeight={180} className={classes.gridList}>
-        <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-          <ListSubheader component="div">Boardhoard</ListSubheader>
-          <SearchBar/>
-        </GridListTile>
-        {tileData.map(tile => (
-          <GridListTile key={tile.img}>
-            <img src={tile.img} alt={tile.title} />
-            <GridListTileBar
-              title={tile.title}
-              subtitle={<span>by: {tile.author}</span>}
-              actionIcon={
-                <IconButton className={classes.icon}>
-                  <InfoIcon />
-                </IconButton>
-              }
-            />
+  filteredTiles = (tiles, filter) => {
+    if(filter === ''){
+      return []
+    }
+    return tiles.games.filter( el => {
+      return el.name.toLowerCase().includes(filter.toLowerCase())
+    }).map((el) => {
+      return {
+        ...el,
+        img: el.image,
+        title: el.name,
+        author: el.publishers,
+      }
+    })
+  }
+  render() {
+    const { classes } = this.props;
+    const { searchTerm } = this.state;
+    console.log(searchTerm)
+    return (
+      <div className={classes.root}>
+        <GridList cellHeight={180} className={classes.gridList}>
+          <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
+            <ListSubheader component="div">Boardhoard</ListSubheader>
+            <SearchBar searchTerm={searchTerm} handleSearch={this.handleSearch}/>
           </GridListTile>
-        ))}
-      </GridList>
-    </div>
-  );
+          {this.filteredTiles(games, searchTerm).map(tile => (
+            <GridListTile key={tile.img}>
+              <img src={tile.img} alt={tile.title} />
+              <GridListTileBar
+                title={tile.title}
+                subtitle={<span>by: {tile.author}</span>}
+                actionIcon={
+                  <IconButton className={classes.icon}>
+                    <InfoIcon />
+                  </IconButton>
+                }
+              />
+            </GridListTile>
+          ))}
+        </GridList>
+      </div>
+    );
+  }
 }
 
 Search.propTypes = {
