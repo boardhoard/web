@@ -10,8 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
 
 
+import {TileModal} from '../../components'
 import {SearchBar} from './components'
-import games from '../Home/data'
 
 const styles = theme => ({
   root: {
@@ -50,10 +50,13 @@ const styles = theme => ({
  * ];
  */
 
+ 
 class Search extends React.Component {
   state = {
     searchTerm: '',
-    tiles: []
+    tiles: [],
+    tileModalVisable: false,
+    tileModalData: null
   }
 
   componentDidMount() {
@@ -66,6 +69,14 @@ class Search extends React.Component {
   handleSearch = (searchTerm) => {
     this.setState({searchTerm})
   } 
+
+  handleTileClose = () => {
+    this.setState({ tileModalVisable: false });
+  };
+
+  handleTileOpen = (tileModalData) => {
+    this.setState({tileModalVisable: true, tileModalData})
+  }
 
   filteredTiles = (tiles, filter) => {
     console.time('filter')
@@ -80,7 +91,8 @@ class Search extends React.Component {
   }
   render() {
     const { classes } = this.props;
-    const { searchTerm, tiles } = this.state;
+    const { searchTerm, tiles, tileModalData, tileModalVisable} = this.state;
+
     console.log(searchTerm)
     return (
       <div className={classes.root}>
@@ -92,7 +104,7 @@ class Search extends React.Component {
           {!searchTerm && <i style={{margin: 'auto', marginTop: 100}}>Please enter searchterm...</i>}
           {this.filteredTiles(tiles, searchTerm).map(tile => (
             <GridListTile key={tile.img}>
-              <img src={tile.thumbnail} alt={tile.name} />
+              <img src={tile.thumbnail} alt={tile.name} onClick={() => this.handleTileOpen(tile)} />
               <GridListTileBar
                 title={tile.name}
                 subtitle={<span>Rank: {tile.rank}</span>}
@@ -105,6 +117,7 @@ class Search extends React.Component {
             </GridListTile>
           ))}
         </GridList>
+        {(tileModalVisable && tileModalData.gameId) && <TileModal id={tileModalData.gameId} open={tileModalVisable} meta={tileModalData} handleClose={this.handleTileClose} />}
       </div>
     );
   }
