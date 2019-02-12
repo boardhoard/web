@@ -76,7 +76,7 @@ class Home extends React.Component {
         >
           <BottomNavigationAction onClick={(props)=> {console.log(props)}} label="Search" icon={<SearchIcon />} />
           <BottomNavigationAction label="My Library" icon={<CollectionsBookmark />} />
-          <BottomNavigationAction label="Favorites" icon={<ShowChart />} />
+          <BottomNavigationAction label="Hot" icon={<ShowChart />} />
         </BottomNavigation>
         {goTo()}
       </div>      
