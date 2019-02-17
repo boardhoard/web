@@ -9,7 +9,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
 import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
-
+import localForage from 'localforage';
 
 import {TileModal} from '../../components'
 import {SearchBar} from './components'
@@ -61,7 +61,7 @@ class Search extends React.Component {
   }
 
   componentDidMount() {
-    let library = localStorage.getItem('library')
+    let library = localForage.getItem('library')
     if(library && library.length > 0) {
       library = [...JSON.parse(library)].map(el => el.gameId)
     } else {
@@ -98,13 +98,13 @@ class Search extends React.Component {
   }
 
   addToLibrary = (tile) => {
-    let library = localStorage.getItem('library')
+    let library = localForage.getItem('library')
     if(library && library.length > 0) {
       library = [...JSON.parse(library),tile]
     } else {
       library = [tile]
     }
-    localStorage.setItem('library', JSON.stringify(library))
+    localForage.setItem('library', JSON.stringify(library)).then()
     this.setState({library: library.map( el => el.gameId)})
   }
   render() {

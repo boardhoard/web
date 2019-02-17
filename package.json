@@ -8,6 +8,7 @@
     "antd": "^3.13.2",
     "firebase": "^5.8.2",
     "gh-pages": "^2.0.1",
+    "localforage": "^1.7.3",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-google-login": "^5.0.0",

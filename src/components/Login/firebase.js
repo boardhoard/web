@@ -1,14 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
+import config from './config';
 
-const config = {
-    apiKey: "AIzaSyDmaCwOP3cpcVj91VGNPrHopr234Z_6f3o",
-    authDomain: "boardhoard.firebaseapp.com",
-    databaseURL: "https://boardhoard.firebaseio.com",
-    projectId: "Boardhoard",
-    storageBucket: "boardhoard.appspot.com",
-    messagingSenderId: "736982039678"
-};
 
 class Firebase {
   constructor() {

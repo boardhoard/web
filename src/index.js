@@ -4,6 +4,12 @@ import './index.css';
 import 'antd/dist/antd.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import localForage from 'localforage';
+
+localForage.setDriver([localForage.WEBSQL, localForage.INDEXEDDB]);
+localForage.config({
+    name: 'Boardhoard'
+});
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
