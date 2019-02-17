@@ -12,7 +12,7 @@ import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
 import { Spin } from 'antd';
 
-
+import bgg from '../../utilities'
 import games from '../Home/data'
 import {TileModal} from '../../components'
 
@@ -78,9 +78,11 @@ class TitlebarGridList extends React.Component {
       library = []
     }
     this.setState({library})
-    fetch('https://bgg-json.azurewebsites.net/hot')
-      .then(response => response.json())
-      .then(top => this.setState({ top }));
+    bgg.top()
+    // fetch('https://bgg-json.azurewebsites.net/hot')
+    //   .then(response => response.json())
+    //   .then(top => this.setState({ top }));
+      this.setState({ top:[] })
   }
 
   handleTileClose = () => {
