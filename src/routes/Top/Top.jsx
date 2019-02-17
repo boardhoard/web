@@ -70,19 +70,15 @@ class TitlebarGridList extends React.Component {
     library: []
   }
 
-  componentDidMount() {
+  async componentDidMount()  {
     let library = localStorage.getItem('library')
     if(library && library.length > 0) {
-      library = [...JSON.parse(library)].map(el => el.gameId)
+      library = [...JSON.parse(library)].map(el => el.id)
     } else {
       library = []
     }
     this.setState({library})
-    bgg.top()
-    // fetch('https://bgg-json.azurewebsites.net/hot')
-    //   .then(response => response.json())
-    //   .then(top => this.setState({ top }));
-      this.setState({ top:[] })
+    this.setState({ top: await bgg.top() })
   }
 
   handleTileClose = () => {
@@ -101,7 +97,7 @@ class TitlebarGridList extends React.Component {
       library = [tile]
     }
     localStorage.setItem('library', JSON.stringify(library))
-    this.setState({library: library.map( el => el.gameId)})
+    this.setState({library: library.map( el => el.id)})
 
   }
 
@@ -123,14 +119,14 @@ class TitlebarGridList extends React.Component {
                 subtitle={<span>Rank: {tile.rank}</span>}
                 actionIcon={
                   <IconButton className={classes.icon} >
-                    {library.includes(tile.gameId) ? <PlaylistAddCheck/> : <LibraryAdd onClick={() => this.addToLibrary(tile)} />}
+                    {library.includes(tile.id) ? <PlaylistAddCheck/> : <LibraryAdd onClick={() => this.addToLibrary(tile)} />}
                   </IconButton>
                 }
               />
             </GridListTile>
           ))}
         </GridList>
-        {(tileModalVisable && tileModalData.gameId) && <TileModal id={tileModalData.gameId} open={tileModalVisable} meta={tileModalData} handleClose={this.handleTileClose} />}
+        {(tileModalVisable && tileModalData.id) && <TileModal id={tileModalData.id} open={tileModalVisable} meta={tileModalData} handleClose={this.handleTileClose} />}
       </div>
     );
   }
