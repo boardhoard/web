@@ -1,3 +1,3 @@
-import bgg from './BGG';
+import * as bgg from './BoardGameGeek';
 
 export default bgg;
